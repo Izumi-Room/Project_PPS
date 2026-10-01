@@ -51,16 +51,6 @@ class UserSeeder extends Seeder
                 'name' => 'Dr. Ir. Rahmat Hidayat, M.Sc (Wakil Dekan 1)',
                 'roles' => ['WADEK1'],
             ],
-            [
-                'email' => 'dualrole@magang.ac.id',
-                'name' => 'Dr. Pratama Yudha (Dosbing & Dosen MK)',
-                'roles' => ['DOSBING', 'DOSEN_MK'], // Tests multiple roles for one user
-            ],
-            [
-                'email' => 'norole@magang.ac.id',
-                'name' => 'Akun Baru Tanpa Role',
-                'roles' => [], // Tests user without role
-            ],
         ];
 
         foreach ($users as $userData) {

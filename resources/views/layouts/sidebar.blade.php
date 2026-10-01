@@ -9,7 +9,7 @@
     $hasWadek1 = $currentUser->hasRole('WADEK1');
 @endphp
 
-<aside id="appSidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col flex-shrink-0 transition-all duration-300">
+<aside id="appSidebar" class="hidden lg:flex w-64 bg-slate-900 border-r border-slate-800 flex-col flex-shrink-0 transition-all duration-300 z-30">
     <!-- Brand Header -->
     <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-3">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">

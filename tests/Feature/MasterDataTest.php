@@ -72,10 +72,10 @@ class MasterDataTest extends TestCase
 
         // POST /master/partner-institutions returns 403
         $response = $this->actingAs($this->regularStudent)->post(route('master.partner-institutions.store'), [
-            'name' => 'Fake Company',
-            'address' => 'Fake Address',
-            'contact_person' => 'Fake PIC',
-            'email' => 'fake@company.com',
+            'name' => 'Production Partner Company',
+            'address' => 'Jakarta, Indonesia',
+            'contact_person' => 'John Doe',
+            'email' => 'contact@company.com',
             'phone' => '08123456789',
             'sector' => 'Swasta',
         ]);

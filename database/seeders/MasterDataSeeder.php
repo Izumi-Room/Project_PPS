@@ -192,8 +192,8 @@ class MasterDataSeeder extends Seeder
             );
         }
 
-        // 5. Connect existing demo users to Prodi if appropriate
-        $mhs = User::where('email', 'mahasiswa@example.com')->first();
+        // 5. Connect existing users to Prodi if appropriate
+        $mhs = User::where('email', 'mhs@magang.ac.id')->first();
         if ($mhs && empty($mhs->study_program_id)) {
             $mhs->update([
                 'study_program_id' => $prodiModels['TI']->id,
@@ -203,7 +203,7 @@ class MasterDataSeeder extends Seeder
             ]);
         }
 
-        $kaprodi = User::where('email', 'kaprodi@example.com')->first();
+        $kaprodi = User::where('email', 'kaprodi@magang.ac.id')->first();
         if ($kaprodi && empty($kaprodi->study_program_id)) {
             $kaprodi->update([
                 'study_program_id' => $prodiModels['TI']->id,
