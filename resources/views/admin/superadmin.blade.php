@@ -1,101 +1,82 @@
 @extends('layouts.app', ['title' => 'Panel Super Administrator'])
 
 @section('content')
-<div class="space-y-8 max-w-7xl mx-auto">
-    <!-- Header Card -->
-    <div class="rounded-3xl bg-gradient-to-r from-rose-950/70 via-slate-900 to-slate-900 border border-rose-900/40 p-6 sm:p-8 shadow-xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                    Restricted Access • Superadmin & Kaprodi Only
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                    Panel Kontrol Super Administrator
-                </h2>
-                <p class="mt-1 text-sm text-slate-300">
-                    Manajemen pengguna sistem, matriks role many-to-many, dan audit otorisasi.
-                </p>
-            </div>
-            <div class="text-right">
-                <span class="text-xs text-slate-400 block">Status Akses Anda:</span>
-                <span class="font-mono text-sm font-bold text-rose-400">
-                    {{ Auth::user()->hasRole('SUPERADMIN') ? 'AUTHORIZED' : 'DENIED' }}
-                </span>
-            </div>
+<div class="space-y-8 max-w-7xl mx-auto animate-fade-in" style="animation-delay: 100ms;">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-white">Panel Super Administrator</h1>
+            <p class="text-sm text-slate-400 mt-1">Audit otorisasi RBAC dan distribusi hak akses pengguna.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">Status Akses:</span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium {{ Auth::user()->hasRole('SUPERADMIN') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20' }}">
+                {{ Auth::user()->hasRole('SUPERADMIN') ? 'AUTHORIZED' : 'DENIED' }}
+            </span>
+        </div>
+    </header>
+
+    <!-- Metrics Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="bg-slate-900/40 border border-white/5 rounded-2xl p-6 space-y-2">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Total Akun</span>
+            <div class="text-3xl font-semibold text-white tracking-tight">{{ $users->total() }}</div>
+            <p class="text-xs text-slate-400">Pengguna terdaftar di sistem</p>
+        </div>
+        <div class="bg-slate-900/40 border border-white/5 rounded-2xl p-6 space-y-2">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Model RBAC</span>
+            <div class="text-3xl font-semibold text-white tracking-tight">Many-to-Many</div>
+            <p class="text-xs text-slate-400">Multi-role authorization</p>
+        </div>
+        <div class="bg-slate-900/40 border border-white/5 rounded-2xl p-6 space-y-2">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Inheritance</span>
+            <div class="text-3xl font-semibold text-white tracking-tight">Kaprodi &rarr; Superadmin</div>
+            <p class="text-xs text-slate-400">Pewarisan hak akses otomatis</p>
         </div>
     </div>
 
     <!-- User Management Table with Multi-Role Display -->
-    <div class="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 sm:p-8">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div class="bg-slate-900/40 border border-white/5 rounded-2xl overflow-hidden">
+        <div class="p-6 border-b border-white/5 flex items-center justify-between">
             <div>
-                <h3 class="text-base font-bold text-white">Daftar Pengguna & Penetapan Role</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Membuktikan relasi Many-to-Many (users &rarr; user_roles &rarr; roles).</p>
+                <h3 class="text-sm font-medium text-white">Daftar Pengguna & Otorisasi</h3>
+                <p class="text-xs text-slate-400 mt-1">Audit penetapan peran langsung dari sistem.</p>
             </div>
-            <span class="text-xs font-mono text-slate-400 bg-slate-800 px-3 py-1 rounded-xl">
-                Total {{ $users->total() }} Akun Terdaftar
-            </span>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
-                        <th class="py-3 px-4">Nama Pengguna</th>
-                        <th class="py-3 px-4">Email Kampus</th>
-                        <th class="py-3 px-4">Role Terpasang (Many-to-Many)</th>
-                        <th class="py-3 px-4">Status Hak Akses</th>
-                        <th class="py-3 px-4 text-right">Aksi</th>
+                    <tr class="border-b border-white/5 text-[11px] uppercase tracking-widest text-slate-500">
+                        <th class="py-4 px-6 font-medium">Pengguna</th>
+                        <th class="py-4 px-6 font-medium">Email</th>
+                        <th class="py-4 px-6 font-medium">Role Aktif</th>
+                        <th class="py-4 px-6 font-medium text-right">ID</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                <tbody class="divide-y divide-white/5 text-sm text-slate-300">
                     @foreach ($users as $u)
-                        <tr class="hover:bg-slate-800/30 transition">
-                            <td class="py-3.5 px-4 font-semibold text-white">
-                                {{ $u->name }}
-                            </td>
-                            <td class="py-3.5 px-4 font-mono text-slate-400">
-                                {{ $u->email }}
-                            </td>
-                            <td class="py-3.5 px-4">
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="py-4 px-6 font-medium text-white">{{ $u->name }}</td>
+                            <td class="py-4 px-6 text-slate-400">{{ $u->email }}</td>
+                            <td class="py-4 px-6">
                                 <div class="flex flex-wrap gap-1">
                                     @forelse ($u->roles as $r)
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold
-                                            {{ $r->name === 'SUPERADMIN' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : '' }}
-                                            {{ $r->name === 'KAPRODI' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : '' }}
-                                            {{ $r->name === 'MHS' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : '' }}
-                                            {{ $r->name === 'TU' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : '' }}
-                                            {{ $r->name === 'DOSBING' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : '' }}
-                                            {{ $r->name === 'DOSEN_MK' ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : '' }}
-                                            {{ $r->name === 'WADEK1' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : '' }}">
+                                        <span class="px-2 py-0.5 rounded-md bg-white/5 text-[10px] text-slate-300">
                                             {{ $r->name }}
                                         </span>
                                     @empty
-                                        <span class="text-rose-400 italic text-[10px]">Tanpa Role</span>
+                                        <span class="text-slate-500 text-xs italic">Tanpa Role</span>
                                     @endforelse
-
                                     @if ($u->hasRole('KAPRODI') && !$u->roles->contains('name', 'SUPERADMIN'))
-                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30" title="Kaprodi otomatis memiliki hak Superadmin">
-                                            +SUPERADMIN (Inherited)
+                                        <span class="px-2 py-0.5 rounded-md bg-white/5 text-[10px] text-indigo-400">
+                                            +SUPERADMIN
                                         </span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="py-3.5 px-4">
-                                @if ($u->hasRole('SUPERADMIN'))
-                                    <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
-                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                                        Full Superadmin
-                                    </span>
-                                @elseif ($u->roles->isNotEmpty())
-                                    <span class="text-slate-400 text-[11px]">Role Standar</span>
-                                @else
-                                    <span class="text-rose-400 text-[11px] font-semibold">Terkunci (No Role)</span>
-                                @endif
-                            </td>
-                            <td class="py-3.5 px-4 text-right">
-                                <span class="text-[10px] text-slate-500 font-mono">ID: #{{ $u->id }}</span>
+                            <td class="py-4 px-6 text-right font-mono text-xs text-slate-500">
+                                #{{ $u->id }}
                             </td>
                         </tr>
                     @endforeach
@@ -103,9 +84,11 @@
             </table>
         </div>
 
-        <div class="mt-4">
-            {{ $users->links() }}
-        </div>
+        @if($users->hasPages())
+            <div class="p-6 border-t border-white/5">
+                {{ $users->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
